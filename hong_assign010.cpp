@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <iomanip> // 소수점 결정을 위한 headerfile
+#include <iomanip> // 소수점 결정을 위한 headerfile -> setf, setprecision 함수 사용 가능
 
 using namespace std;
 
@@ -24,7 +24,7 @@ public:
 
 	double str_to_double(string s){
 		istringstream iss(s);
-		iss.setf(ios::fixed | ios::showpoint);
+		iss.setf(ios::fixed | ios::showpoint); // 소수점 고정하고, 고정된 소수점을 모두 보여준다.
 		double f = 0.0;
 	
 	
