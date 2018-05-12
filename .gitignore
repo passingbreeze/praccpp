@@ -10,6 +10,8 @@
 *.ko
 *.obj
 *.elf
+*.vcxproj
+*.vcxproj.filters
 
 # Linker output
 *.ilk
@@ -117,6 +119,7 @@ xcuserdata/
 *.user
 *.userosscache
 *.sln.docstates
+*.sln
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
