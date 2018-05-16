@@ -1,0 +1,6 @@
+5
+Mal-Dong Kim        25 Computer Science    3.45
+Mel-Dong Kim        24 Computer Eng        4.44
+Dal-Dong Kim        33 Economy             2.90
+Mol-Dong Kim        21 History             3.33
+Seol-hyun Kim       23 Theater and Film    3.10

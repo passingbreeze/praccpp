@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <sstream>
-#include <iomanip> // 소수점 결정을 위한 headerfile -> setf, setprecision 함수 사용 가능
+#include <iomanip> // header for set precision
 
 using namespace std;
 
@@ -12,9 +13,9 @@ class student {
 	char dept[20];
 	float score;
 public:
-	student(){}
+	student() {}
 
-	int str_to_int(string s){
+	int str_to_int(string s) {
 		istringstream iss(s);
 		int n = 0;
 
@@ -22,26 +23,25 @@ public:
 		return n;
 	}
 
-	double str_to_double(string s){
+	double str_to_double(string s) {
 		istringstream iss(s);
-		iss.setf(ios::fixed | ios::showpoint); // 소수점 고정하고, 고정된 소수점을 모두 보여준다.
+		iss.setf(ios::fixed | ios::showpoint);
 		double f = 0.0;
-	
-	
+
 		iss >> setprecision(2) >> f;
-	
+
 		return f;
 	}
 
-	string int_to_str(int n){
+	string int_to_str(int n) {
 		ostringstream oss;
-	
+
 		oss << n;
 
 		return oss.str();
 	}
 
-	string float_to_str(float f){
+	string float_to_str(float f) {
 		ostringstream oss;
 		oss.setf(ios::fixed | ios::showpoint);
 
@@ -50,106 +50,112 @@ public:
 	}
 
 	int readFromText(char* filename, student** students) {
-		int n = 0;
-		char std_age[3], std_score[5];
-		
+		int i, n=0;
 		ifstream ifs(filename);
 
-		if(!(ifs.is_open())){
+		if (!(ifs.is_open())) {
 			cerr << "No Input File." << endl;
 			return -1;
 		}
+
 		ifs >> n; // the number of records
-	
-		for (int i = 0; i < n; ++i){
-			ifs.read((*students)[i].name, 20);			
-			ifs.read(std_age, 3);
-			(*students)[i].age = (unsigned)str_to_int(std_age);
-			
-			ifs.read((*students)[i].dept, 20);			
-			ifs.read(std_score, 5); // include newline character
-			(*students)[i].score = (float)str_to_double(std_score);
-			cout << (*students)[i].score << endl;
-		}
+		for (i = 0; i < n; ++i)
+			ifs >> (*students)[i];
 		ifs.close();
-		return n;
+		return i;
 	}
 
-	void writeToBinary(char* filename, int n, student* students){
-		ofstream ofs(filename, ios::binary); // Ubuntu Linux / Max OS X에서는 ofs.binary도 가능.
-		string strage, strscore;
-
-		if(!(ofs.is_open())){
+	void writeToBinary(char* filename, int n, student* students) {
+		ofstream ofs(filename, ios::binary);
+		// in Ubuntu Linux / Max OS X, "ifs.binary" can be used instead of "ios::binary".
+		
+		if (!(ofs.is_open())) {
 			cerr << "No Output File." << endl;
 			return;
 		}
 
-		ofs << n;
-		for (int i = 0; i < n; ++i)
-		{
-			strage = int_to_str(students[i].age);
-			strscore = float_to_str(students[i].score);
-			ofs.write(students[i].name,20);
-			ofs.write(&strage[0],3);
-			ofs.write(students[i].dept,20);
-			ofs.write(&strscore[0], 5);
+		ofs << n << '\r' << endl;
+		for (int i = 0; i < n; ++i){
+			ofs << students[i] << 'r' << endl;
 		}
 		ofs.close();
 	}
 
-	int readFromBinary(char* filename, student** students){
-		int n = 0;
-		char std_age[3], std_score[5];
-		
-		ifstream ifs(filename, ios::binary); // Ubuntu Linux / Max OS X에서는 ifs.binary도 가능.
-		
-		if(!(ifs.is_open())){
+	int readFromBinary(char* filename, student** students) {
+		int n = 0, i;
+		ifstream ifs(filename, ios::binary);
+		// in Ubuntu Linux / Max OS X, "ifs.binary" can be used instead of "ios::binary".
+
+		if (!(ifs.is_open())) {
 			cerr << "No Input File." << endl;
 			return -1;
 		}
 		ifs >> n; // the number of records
-		
-		for (int i = 0; i < n; ++i){
-			ifs.read((*students)[i].name, 20);			
-			ifs.read(std_age, 3);
-			(*students)[i].age = (unsigned)str_to_int(std_age);
-			
-			ifs.read((*students)[i].dept, 20);			
-			ifs.read(std_score, 5);
-			(*students)[i].score = (float)str_to_double(std_score);
-			cout << (*students)[i].score << endl;
-		}
+		for (i = 0; i < n; ++i)
+			ifs >> (*students)[i];
 		ifs.close();
-		return n;
+		return i;
 	}
-	void writeToText(char* filename, int n, student* students){
+
+	void writeToText(char* filename, int n, student* students) {
 		ofstream ofs(filename);
-		string strage, strscore;
-
-		if(!(ofs.is_open())){
+		if (!(ofs.is_open())) {
 			cerr << "No Output File." << endl;
 			return;
 		}
 
-		ofs << n;
-		for (int i = 0; i < n; ++i)
-		{
-			strage = int_to_str(students[i].age);
-			strscore = float_to_str(students[i].score);
-			ofs.write(students[i].name,20);
-			ofs.write(&strage[0],3);
-			ofs.write(students[i].dept,20);
-			ofs.write(&strscore[0], 5);
+		ofs << n << '\r' << endl;
+		for (int i = 0; i < n; ++i) {
+			ofs << students[i] << 'r' << endl;
 		}
 		ofs.close();
 	}
+
+	friend istream& operator >> (istream& is, student& s) {
+		int i, j = 0;
+		string strline;
+		char age[3], score[4];
+		getline(is, strline);
+
+		for (i = 0; i<20; ++i)
+			s.name[i] = strline[i];
+		s.name[i - 1] = '\0';
+		j += i;
+
+		for (i = 0; i < 3; ++i) {
+			if (strline[j + i] = ' ')
+				break;
+			age[i] = strline[j + i] - '0';
+		}
+		s.age = (unsigned)(s.str_to_int(age));
+		j += i;
+
+		for (i = 0; i < 20; ++i)
+			s.dept[i] = strline[i + j];
+		s.dept[i - 1] = '\0';
+		j += i;
+
+		for (i = 0; i < 4; ++i) {
+			if (strline[i] = '.')
+				score[i] = strline[j + i];
+			score[i] = strline[j + i] - '0';
+		}
+		s.score = (float)(s.str_to_double(score));
+		return is;
+	}
+
+	friend ostream& operator << (ostream& os, const student& s){
+		os << s.name << ' ' << s.age << ' ' << s.dept << ' ' << s.score;
+		return os;
+	}
+
 
 };
 
 int main()
 {
 	student* std = new student[100]; // get heap address
-	int stdnum1 = 0, stdnum2=0;
+	int stdnum1 = 0, stdnum2 = 0;
 	char txtfile[512] = "\0";
 	char binfile[512] = "\0";
 
@@ -162,7 +168,7 @@ int main()
 	cin >> binfile;
 	std->writeToBinary(binfile, stdnum1, std);
 
-	stdnum2 = std -> readFromBinary(binfile, &std);
+	stdnum2 = std->readFromBinary(binfile, &std);
 	cout << "the number of students from binfile : " << stdnum2 << endl;
 
 	cout << "Enter Output Text File name : ";
