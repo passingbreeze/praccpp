@@ -35,9 +35,7 @@ public:
 
 	string int_to_str(int n) {
 		ostringstream oss;
-
 		oss << n;
-
 		return oss.str();
 	}
 
@@ -50,39 +48,41 @@ public:
 	}
 
 	int readFromText(char* filename, student** students) {
-		int i, n=0;
+		int n = 0;
+
 		ifstream ifs(filename);
 
 		if (!(ifs.is_open())) {
 			cerr << "No Input File." << endl;
 			return -1;
 		}
-
 		ifs >> n; // the number of records
-		for (i = 0; i < n; ++i)
+
+		for (int i = 0; i < n; ++i)
 			ifs >> (*students)[i];
 		ifs.close();
-		return i;
+		return n;
 	}
 
 	void writeToBinary(char* filename, int n, student* students) {
 		ofstream ofs(filename, ios::binary);
 		// in Ubuntu Linux / Max OS X, "ifs.binary" can be used instead of "ios::binary".
-		
+
 		if (!(ofs.is_open())) {
 			cerr << "No Output File." << endl;
 			return;
 		}
 
-		ofs << n << '\r' << endl;
-		for (int i = 0; i < n; ++i){
-			ofs << students[i] << 'r' << endl;
+		ofs << n;
+		for (int i = 0; i < n; ++i) {
+			ofs << students[i] << "\n";
 		}
 		ofs.close();
 	}
 
 	int readFromBinary(char* filename, student** students) {
-		int n = 0, i;
+		int n = 0;
+
 		ifstream ifs(filename, ios::binary);
 		// in Ubuntu Linux / Max OS X, "ifs.binary" can be used instead of "ios::binary".
 
@@ -91,65 +91,51 @@ public:
 			return -1;
 		}
 		ifs >> n; // the number of records
-		for (i = 0; i < n; ++i)
+
+		for (int i = 0; i < n; ++i)
 			ifs >> (*students)[i];
 		ifs.close();
-		return i;
+		return n;
 	}
 
 	void writeToText(char* filename, int n, student* students) {
 		ofstream ofs(filename);
+
 		if (!(ofs.is_open())) {
 			cerr << "No Output File." << endl;
 			return;
 		}
 
-		ofs << n << '\r' << endl;
+		ofs << n;
 		for (int i = 0; i < n; ++i) {
-			ofs << students[i] << 'r' << endl;
+			ofs << students[i] << "\n";
 		}
 		ofs.close();
 	}
 
-	friend istream& operator >> (istream& is, student& s) {
-		int i, j = 0;
-		string strline;
-		char age[3], score[4];
-		getline(is, strline);
-
-		for (i = 0; i<20; ++i)
-			s.name[i] = strline[i];
-		s.name[i - 1] = '\0';
-		j += i;
-
-		for (i = 0; i < 3; ++i) {
-			if (strline[j + i] = ' ')
-				break;
-			age[i] = strline[j + i] - '0';
-		}
-		s.age = (unsigned)(s.str_to_int(age));
-		j += i;
-
-		for (i = 0; i < 20; ++i)
-			s.dept[i] = strline[i + j];
-		s.dept[i - 1] = '\0';
-		j += i;
-
-		for (i = 0; i < 4; ++i) {
-			if (strline[i] = '.')
-				score[i] = strline[j + i];
-			score[i] = strline[j + i] - '0';
-		}
-		s.score = (float)(s.str_to_double(score));
+	friend istream& operator>>(istream& is, student& s) {
+		char std_age[3], std_score[5];
+		is.read(s.name, 20);
+		is.read(std_age, 3);
+		s.age = (unsigned)(s.str_to_int(std_age));
+		is.read(s.dept, 20);
+		is.read(std_score, 5);
+		s.score = (float)(s.str_to_double(std_score));
 		return is;
 	}
 
-	friend ostream& operator << (ostream& os, const student& s){
-		os << s.name << ' ' << s.age << ' ' << s.dept << ' ' << s.score;
+	friend ostream& operator<<(ostream& os, student& s) {
+		string strage, strscore;
+
+		strage = (s.int_to_str(s.age));
+		strscore = (s.float_to_str(s.score));
+		os.write(s.name, 20);
+		os.write(&strage[0], 2);
+		os << ' ';
+		os.write(s.dept, 20);
+		os.write(&strscore[0], 4);
 		return os;
 	}
-
-
 };
 
 int main()
