@@ -1,8 +1,9 @@
+#define _USE_MATH_DEFINES
+
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
 
-#define _USE_MATH_DEFINES
 using namespace std;
 
 class shape {
@@ -24,15 +25,10 @@ class shapeset {
 	int maxshapes = 0;
 public:
 	shapeset(int n) : maxshapes(n) {
-		shared_ptr<shape*> shapes(new shape*[n]);
-		// shapes = new shape*[n]; <- not using smart pointer
+		shapes = new shape*[n];
 	}
-	shapeset(const shapeset& set) : shapes(set.shapes), numshapes(set.numshapes), maxshapes(set.maxshapes) {}
 
-	// ~shapeset()  {<- if not using smart pointer destructor must be needed!
-	// 	if (shapes != nullptr)
-	// 		delete[] shapes;
-	// }
+	shapeset(const shapeset& set) : shapes(set.shapes), numshapes(set.numshapes), maxshapes(set.maxshapes) {}
 
 	shapeset& operator= (const shapeset& set) {
 		shapes = set.shapes;
@@ -42,10 +38,21 @@ public:
 	}
 
 	shapeset operator+(shape& s) {
+		shapeset temp(*this);
+		(temp.shapes)[(temp.numshapes)++] = &s;
+		return temp;
+	}
+
+	shapeset& operator+=(shape& s) {
 		shapes[numshapes++] = &s;
 		return *this;
 	}
 
+	shapeset& operator+(int n) {
+		maxshapes += n;
+		return *this;
+	}
+	
 	double totalarea() {
 		double sum = 0.0;
 		for (int i = 0; i < numshapes; ++i) {
@@ -144,7 +151,6 @@ public:
 		return *this;
 	}
 
-	bool isContaining(const point& a); // 얜 뭐하는 애지...?
 	double area() {
 		return 0.5 * abs((p1.getx() * p2.gety()) + (p2.getx() * p3.gety()) + (p3.getx() * p1.gety()) - (p1.getx() * p3.gety()) - (p3.getx() * p2.gety()) - (p2.getx() * p1.gety()));
 	}
@@ -164,9 +170,9 @@ int main(int argc, char const *argv[])
 	circle c(p4, 10);
 	rectangle r(p1, p3);
 
-	s = s + t;
-	s = s + c;
-	s = s + r;
+	s += t;
+	s += c;
+	s += r;
 
 	cout << t << endl;
 	cout << c << endl;

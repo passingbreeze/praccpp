@@ -75,7 +75,7 @@ public:
 
 		ofs << n;
 		for (int i = 0; i < n; ++i) {
-			ofs << students[i] << "\n";
+			ofs << students[i];
 		}
 		ofs.close();
 	}
@@ -108,7 +108,7 @@ public:
 
 		ofs << n;
 		for (int i = 0; i < n; ++i) {
-			ofs << students[i] << "\n";
+			ofs << students[i];
 		}
 		ofs.close();
 	}
@@ -130,8 +130,7 @@ public:
 		strage = (s.int_to_str(s.age));
 		strscore = (s.float_to_str(s.score));
 		os.write(s.name, 20);
-		os.write(&strage[0], 2);
-		os << ' ';
+		os.write(&strage[0], 3);
 		os.write(s.dept, 20);
 		os.write(&strscore[0], 4);
 		return os;
