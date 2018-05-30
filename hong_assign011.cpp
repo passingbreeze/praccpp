@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <cmath>
-#include <cstdlib>
+#include <memory>
 
 using namespace std;
 
@@ -20,13 +20,11 @@ public:
 };
 
 class shapeset {
-	shape** shapes;
+	shape** shapes = nullptr;
 	int numshapes = 0;
 	int maxshapes = 0;
 public:
-	shapeset(int n) : maxshapes(n) {
-		shapes = new shape*[n];
-	}
+	shapeset(int n): maxshapes(n), shapes(new shape*[n]) {}
 
 	shapeset(const shapeset& set) : shapes(set.shapes), numshapes(set.numshapes), maxshapes(set.maxshapes) {}
 
@@ -47,6 +45,7 @@ public:
 		shapes[numshapes++] = &s;
 		return *this;
 	}
+	
 
 	shapeset& operator+(int n) {
 		maxshapes += n;
@@ -170,9 +169,9 @@ int main(int argc, char const *argv[])
 	circle c(p4, 10);
 	rectangle r(p1, p3);
 
-	s += t;
-	s += c;
-	s += r;
+	s = s+t;
+	s = s+c;
+	s = s+r;
 
 	cout << t << endl;
 	cout << c << endl;
