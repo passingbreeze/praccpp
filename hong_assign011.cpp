@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <cmath>
-#include <memory>
 
 using namespace std;
 
