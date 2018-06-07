@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <set>
 
 using namespace std;
 
@@ -23,7 +24,7 @@ class shapeset {
 	int numshapes = 0;
 	int maxshapes = 0;
 public:
-	shapeset(int n): maxshapes(n), shapes(new shape*[n]) {}
+	shapeset(int n): maxshapes(n), shapes(new shape * [n]) {}
 
 	shapeset(const shapeset& set) : shapes(set.shapes), numshapes(set.numshapes), maxshapes(set.maxshapes) {}
 
@@ -44,13 +45,13 @@ public:
 		shapes[numshapes++] = &s;
 		return *this;
 	}
-	
+
 
 	shapeset& operator+(int n) {
 		maxshapes += n;
 		return *this;
 	}
-	
+
 	double totalarea() {
 		double sum = 0.0;
 		for (int i = 0; i < numshapes; ++i) {
@@ -168,9 +169,9 @@ int main(int argc, char const *argv[])
 	circle c(p4, 10);
 	rectangle r(p1, p3);
 
-	s = s+t;
-	s = s+c;
-	s = s+r;
+	s = s + t;
+	s = s + c;
+	s = s + r;
 
 	cout << t << endl;
 	cout << c << endl;
